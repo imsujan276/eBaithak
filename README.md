@@ -2,11 +2,11 @@
 ## a simple video chat application made in JAVA SPRING
 
 ## FEATURES
-1. User register/signin - ## done
-2. Chat chat group (baithak) - ## done
-3. Add friends to the chat group - #Working on it
-4. Chat with friends (using websocket) - ### not yet
-5. Create a video call (using websocket) - ### not yet
+1. User register/signin - ``done``
+2. Chat chat group (baithak) - ``done``
+3. Add friends to the chat group - ``Working on it``
+4. Chat with friends (using websocket) - ``not yet``
+5. Create a video call (using websocket) - ``not yet``
 
 ## Feel free to contribute in this project
 

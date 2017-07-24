@@ -1,9 +1,9 @@
-#eBaithak 
-##- a simple video chat application made in JAVA SPRING
+# eBaithak 
+## - a simple video chat application made in JAVA SPRING
 
 *************************************************************************************************************************
 
-##FEATURES
+## FEATURES
 1. User register/signin - done
 2. Chat chat group (baithak) - done
 
@@ -14,13 +14,13 @@
 
 *************************************************************************************************************************
 
-##Feel free t contribute in this project
+## Feel free t contribute in this project
 
 *************************************************************************************************************************
 
-##NOTE:
+## NOTE:
 1. create a database : ebaithak
-2. change in webapp/WEB-INF/spring/appServlet/servlet-context.xml
+2. change in webapp/WEB-INF/spring/appServlet/servlet-context.xml.
 	        ``<property name="hibernateProperties">
             <props>
                 <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
@@ -31,3 +31,4 @@
             </props>
         </property>``
 
+ # THANK YOU

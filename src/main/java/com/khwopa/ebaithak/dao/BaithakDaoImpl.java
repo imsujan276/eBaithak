@@ -1,6 +1,7 @@
 package com.khwopa.ebaithak.dao;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.khwopa.ebaithak.models.Baithak;
+import com.khwopa.ebaithak.models.Notification;
 import com.khwopa.ebaithak.models.User;
 
 @Repository
@@ -38,6 +40,15 @@ public class BaithakDaoImpl implements BaithakDao {
 		String insertSql = "insert into `baithak`(created_by, discription, image, name) values(?,?,?,?)";
 		
 		jdbcTemplate.update(insertSql,new Object[]{b.getCreated_by(), b.getDiscription(), b.getImage(), b.getName()});
+		
+//		Notification notif = new Notification();
+//		notif.setUserId(b.getCreated_by());
+//		String message = "Baithak (<b>"+b.getName()+")</b> has been created.";
+//		notif.setMessage(message);
+//		// Mon Jul 17 16:45:16 
+//		notif.setCreated_at(new Date().toString().substring(0, 20));
+//		session.save(notif);
+	
 	}
 
 	@Override

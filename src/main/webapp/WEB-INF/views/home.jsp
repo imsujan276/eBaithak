@@ -1,10 +1,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ page session="true" %>
 
 
 <html>
 <head>
-<title>e-Baithak | Home</title>
+<title>e-Baithak | Home | ${username}</title>
 <link href="resources/css/chat.css" type="text/css"
 	rel="stylesheet" />
 <link href="resources/css/bootstrap.min.css" type="text/css"
@@ -248,7 +249,7 @@ window.setTimeout(function() {
 					<hr>
 
 					 --%>	
-					 
+					 <hr>
 					<h4>My Groups</h4>
 					<div class="well" id="" style="overflow-y:hidden; overflow-x:hidden; height:auto;">
 						<div class="col-md-12">
@@ -268,33 +269,53 @@ window.setTimeout(function() {
 								
 								<c:forEach var="result" items="${baithakList}">	
 										<form action="baithak" method="post">
-											<div class="col-md-3">
+											
 										
 												<div class="col-md-3">
-													<center>
+													
 														<img src="resources/baithakImg/${result.image}" class="thumbnail" 
 																data-toggle="tooltip" data-placement="right" title="${result.discription}" 
 																alt="GroupImage" width="150px" height="150px">
 														<input type="hidden" name="userName" value="${username}">
 														<input type="hidden" name="groupId" value="${result.id}">
 													  	<input type="submit" class="btn btn-primary" value="${result.name}">
-													</center>
+													
 											</div>
 										</form>
 								</c:forEach>
+							</div>
+						</div>
+					</div></div>
+						
+				<c:if test="${fn:length(groupList) > 0}">
+				
+				<h4> Groups I have Been Added</h4>
+					<div class="well" id="" style="overflow-y:hidden; overflow-x:hidden; height:auto;">
+						<div class="col-md-12">
+							<div class="row">
 
 								
-							
-
-
-								
+								<c:forEach var="result" items="${groupList}">	
+										<form action="baithak" method="post">
+											<div class="col-md-3">
+										
+												<div class="col-md-3">
+													<center>
+														<img src="resources/baithakImg/${result.image}" class="thumbnail" 
+																data-toggle="tooltip" data-placement="right" title="${result.discription}" alt="GroupImage" width="150px" height="150px">
+														<input type="hidden" name="userName" value="${username}">
+														<input type="hidden" name="groupId" value="${result.id}">
+													  	<input type="submit" class="btn btn-primary" value="${result.name}">
+													</center>
+											</div>
+										</form>
+								</c:forEach>								
 							</div>
 
 						</div>
 					</div>
-						
 
-					
+				</c:if>
 					
 				</div>
 			</div>
@@ -303,7 +324,7 @@ window.setTimeout(function() {
 	</div>
 
 
-	<!-- start of the footer -->
+	<!-- start of the footer --
 	<nav class="navbar navbar-default navbar-bottom">
 		<div class="container">
 			<a class="navbar-brand" href="#">@Copyright 2017</a>

@@ -195,6 +195,26 @@ public class UserDaoImpl implements UserDao {
 		return userDetail;
 	}
 
+	@Override
+	public List<User> getAllUser() {
+		JdbcTemplate template = new JdbcTemplate(dataSource);
+		
+		String sql = "Select * from user";
+		List<User> userDetail = new ArrayList<User>();
+
+		List<Map<String, Object>> rows = template.queryForList(sql);
+		for (Map row : rows) {
+			User user = new User();
+			user.setUsername((String) row.get("username"));
+			user.setName((String) row.get("name"));
+			user.setPhoto((String) row.get("photo"));
+			user.setId((Long) row.get("id"));
+			userDetail.add(user);
+		}
+		
+		return userDetail;
+	}
+
 	
 
 }

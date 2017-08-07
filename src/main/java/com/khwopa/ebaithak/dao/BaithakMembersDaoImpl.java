@@ -1,18 +1,23 @@
 package com.khwopa.ebaithak.dao;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.khwopa.ebaithak.models.Baithak;
 import com.khwopa.ebaithak.models.BaithakMembers;
+import com.khwopa.ebaithak.models.Notification;
 import com.khwopa.ebaithak.models.User;
 
 @Repository
@@ -29,14 +34,105 @@ public class BaithakMembersDaoImpl implements BaithakMembersDao {
 	@Autowired
 	public UserDao uDao;
 	
+	@Autowired
+	public BaithakDao bDao;
+	
+	@Override
+	@Transactional
+	public void addMembers(BaithakMembers bmember) {
+		
+		Session session = sessionFactory.getCurrentSession();
+		session.save(bmember);
+		
+		Baithak b = bDao.getBaithak(bmember.getGroupId());
+		
+		User u = uDao.getUser(bmember.getAddedBy());
+		Notification notif = new Notification();
+		notif.setUserId(bmember.getUserId());
+		String message = "<b>"+u.getName()+" ("+u.getUsername()+")</b> added you to the group <b>"+b.getName()+"</b>.";
+		notif.setMessage(message);
+		// Mon Jul 17 16:45:16 
+		notif.setCreated_at(new Date().toString().substring(0, 20));
+		session.save(notif);
+		
+		Notification notif1 = new Notification();
+		notif1.setUserId(bmember.getAddedBy());
+		User u1 = uDao.getUser(bmember.getUserId());
+		String message1 = "<b>"+u1.getName()+" ("+u1.getUsername()+")</b> has been added to the group <b>"+b.getName()+"</b>.";
+		notif1.setMessage(message1);
+		// Mon Jul 17 16:45:16 
+		notif1.setCreated_at(new Date().toString().substring(0, 20));
+		session.save(notif1);
+		
+	}
+	
+	@Override
+	public List<User> getMembers(long groupId) {
+	
+		JdbcTemplate template = new JdbcTemplate(dataSource);
+		List<User> memberList = new ArrayList<User>();
+		String sql = "SELECT * FROM baithakmembers WHERE groupId = '"+groupId+"' ";
+		List<Map<String, Object>> rows = template.queryForList(sql);
+		for (Map row : rows) {
+			User user = new User();
+			String sql2 = "SELECT * FROM user WHERE id = '"+row.get("userId")+"'";
+			List<Map<String, Object>> rows1 = template.queryForList(sql2);
+			for (Map row1 : rows1) {
+				user.setId((Long)row1.get("id"));
+				user.setName((String) row1.get("name"));
+				user.setUsername((String) row1.get("username"));
+				user.setPhoto((String) row1.get("photo"));
+				user.setStatus((Integer) row1.get("status"));
+				memberList.add(user);
+			}
+		}
+		return memberList;
+		
+	}
 
 	@Override
-	public void addMembers(long created_by, long groupId, BaithakMembers membersTobeAdded) {
+	public List<User> getActiveMembers(long groupId) {
+		
+		JdbcTemplate template = new JdbcTemplate(dataSource);
+		List<User> activeMemberList = new ArrayList<User>();
+		String sql = "SELECT * FROM baithakmembers WHERE groupId = '"+groupId+"' ";
+		List<Map<String, Object>> rows = template.queryForList(sql);
+		for (Map row : rows) {
+			User user = new User();
+			String sql2 = "SELECT * FROM user WHERE id = '"+row.get("userId")+"' AND status = 1";
+			List<Map<String, Object>> rows1 = template.queryForList(sql2);
+			for (Map row1 : rows1) {
+				user.setId((Long)row1.get("id"));
+				user.setName((String) row1.get("name"));
+				user.setUsername((String) row1.get("username"));
+				user.setPhoto((String) row1.get("photo"));
+				user.setStatus((Integer) row1.get("status"));
+				activeMemberList.add(user);
+			}
+		}
+		return activeMemberList;
+		
+	}
 
-			
+	@Override
+	public List<Baithak> getAllGroup(long userId) {
 		
-		
-		
+		JdbcTemplate template = new JdbcTemplate(dataSource);
+		List<Baithak> groupList = new ArrayList<Baithak>();
+		String sql = "SELECT * FROM baithakmembers WHERE userId = '"+userId+"' ";
+		List<Map<String, Object>> rows = template.queryForList(sql);
+		for (Map row : rows) {
+			String sql2 = "SELECT * FROM baithak WHERE id = '"+row.get("groupId")+"' ";
+			List<Map<String, Object>> rows1 = template.queryForList(sql2);
+			for (Map row1 : rows1) {
+				Baithak b = new Baithak();
+				b.setId((Long) row1.get("id"));
+				b.setName((String) row1.get("name"));
+				b.setImage((String) row1.get("image"));
+				groupList.add(b);
+			}
+		}
+		return groupList;
 	}
 	
 	@Override
@@ -94,6 +190,8 @@ public class BaithakMembersDaoImpl implements BaithakMembersDao {
 		
 		return friendsList;
 	}
+
+
 
 
 

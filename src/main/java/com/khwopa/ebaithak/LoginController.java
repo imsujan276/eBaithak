@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.khwopa.ebaithak.dao.BaithakDao;
+import com.khwopa.ebaithak.dao.BaithakMembersDao;
 import com.khwopa.ebaithak.dao.FriendsDao;
 import com.khwopa.ebaithak.dao.NotificationDao;
 import com.khwopa.ebaithak.dao.UserDao;
@@ -36,8 +37,15 @@ public class LoginController {
 	public NotificationDao nDao;
 	@Autowired
 	public BaithakDao bDao;
+	@Autowired
+	public BaithakMembersDao bmDao;
 	
 	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(LoginController.class);
+	
+	@RequestMapping(value="/videochat")
+	public String videochat(){
+		return "videochat";
+	}
 	
 	@RequestMapping(value="/home", method=RequestMethod.GET)
 	public String home(HttpSession session, Model model){
@@ -59,7 +67,7 @@ public class LoginController {
 		User u = uDao.getUser(userId);
 		model.addAttribute("name", u.getName());
 		model.addAttribute("notifications",nDao.getNotifications(userId));
-		
+		model.addAttribute("groupList", bmDao.getAllGroup(userId));
 		model.addAttribute("baithakList", bDao.getAllBaithak(userId));
 		return "home";
 		
@@ -91,7 +99,7 @@ public class LoginController {
 		model.addAttribute("userDetail", uDao.getDetail(userId));
 		
 		model.addAttribute("notifications",nDao.getNotifications(userId));
-		
+		model.addAttribute("groupList", bmDao.getAllGroup(userId));
 		model.addAttribute("baithakList", bDao.getAllBaithak(userId));
 		
 		return "home";
@@ -116,12 +124,12 @@ public class LoginController {
 			session.setAttribute("username", user.getUsername());
 			//session.setAttribute("id", uid);
 			
-			session.setMaxInactiveInterval(10*60);
+			session.setMaxInactiveInterval(50*60);
 			
-			if(uDao.isAdmin(user)){
-				logger.info("/login - Admin "+ user.getUsername()+" Logged In");
-				return "admin/index";
-			}
+//			if(uDao.isAdmin(user)){
+//				logger.info("/login - Admin "+ user.getUsername()+" Logged In");
+//				return "admin/index";
+//			}
 			logger.info("/login - User " +user.getUsername()+" Logged In");
 
 			String name = (String) session.getAttribute("username");
@@ -134,10 +142,11 @@ public class LoginController {
 			// change login status
 			uDao.changeStatus(1, userId);
 			model.addAttribute("userDetail", uDao.getDetail(userId));
-			
 			model.addAttribute("baithakList", bDao.getAllBaithak(userId));
-			
+			model.addAttribute("groupList", bmDao.getAllGroup(userId));
+			System.out.println(bmDao.getAllGroup(userId));
 			model.addAttribute("notifications",nDao.getNotifications(userId));
+			
 			return "home";
 		}
 		logger.info("/login - User "+user.getUsername()+" not exists");
@@ -178,7 +187,7 @@ public class LoginController {
 			if(!file.isEmpty()){
 				bytes = file.getBytes();
 				//	Write in the file.
-				FileOutputStream out = new FileOutputStream("F:\\JavaClass\\Spring Framework\\SpringWorkspace\\eBaithak\\src\\main\\webapp\\resources\\userImg\\" + file.getOriginalFilename());
+				FileOutputStream out = new FileOutputStream("F:\\JavaClass\\Spring Framework\\SpringWorkspace\\eBaithak-03\\src\\main\\webapp\\resources\\userImg\\" + file.getOriginalFilename());
 				//System.out.println(file.getOriginalFilename());
 				user.setPhoto(file.getOriginalFilename());
 				out.write(bytes);

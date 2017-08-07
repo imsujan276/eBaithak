@@ -24,6 +24,8 @@ public interface UserDao {
 	
 	public List<User> getDetail(long userId);
 	
+	public List<User> getAllUser();
+	
 	
 
 }

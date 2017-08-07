@@ -32,7 +32,7 @@ public class NotificationDaoImpl implements NotificationDao {
 		
 		JdbcTemplate template = new JdbcTemplate(dataSource);
 		
-		String sql = "Select * from notification where userId='"+userId+"' order by created_at desc";
+		String sql = "Select * from notification where userId='"+userId+"' order by created_at desc LIMIT 3";
 		List<Notification> nList = new ArrayList<Notification>();
 
 		List<Map<String, Object>> rows = template.queryForList(sql);

@@ -21,4 +21,10 @@ public class FileUploadController {
 		
 	}
 	
+	@RequestMapping(value="/ajaxTest", method=RequestMethod.GET)
+	public String test(){
+		
+		return "Tested.....";
+		
+	}
 }

@@ -12,7 +12,10 @@ public class BaithakMembers {
 
 	@Id
 	@GeneratedValue	
-	private Long groupId;
+	private long id;
+	
+	@Column
+	private long groupId;
 	
 	@Column
 	private long userId;
@@ -20,11 +23,19 @@ public class BaithakMembers {
 	@Column
 	private long addedBy;
 
-	public Long getGroupId() {
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public long getGroupId() {
 		return groupId;
 	}
 
-	public void setGroupId(Long groupId) {
+	public void setGroupId(long groupId) {
 		this.groupId = groupId;
 	}
 
@@ -42,8 +53,6 @@ public class BaithakMembers {
 
 	public void setAddedBy(long addedBy) {
 		this.addedBy = addedBy;
-	}
-	
-	
+	}	
 	
 }
